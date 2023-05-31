@@ -14,3 +14,5 @@ if response.status_code == 200:
     print(f"predicted sentmen for this sentance {text} is: {label}, with score of {score}")
 else:
     print(f"Error: {response.status_code} - {response.text}")
+    
+# this is the fist commit that i will UNDO later on
