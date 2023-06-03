@@ -1,0 +1,2 @@
+app/.env
+sql_app.db
