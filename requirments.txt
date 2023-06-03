@@ -1,0 +1,6 @@
+fastapi
+pydantic
+sqlalchamey
+uvicorn[standard]
+python == 3.9.1
+jwt
