@@ -44,6 +44,12 @@ class UserLogIn(UserBase):
 
 class UserCreate(UserLogIn): 
     name: str
+    confirm_password: str
+    
+class UserUpdate(UserBase):
+    name: str
+    class Config:
+        orm_mode = True
 
 class User(UserBase):
     id: int

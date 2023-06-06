@@ -1,17 +1,25 @@
 from fastapi import Depends, FastAPI, HTTPException, Header, Cookie
 from typing import Annotated, List, Union
-from passlib.context import CryptContext
+# from passlib.context import CryptContext
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-from sql_app.auth.jwt_handler import signJWT, get_JWT_ID
-from sql_app.auth.jwt_bearer import JWTBearer
-from sql_app.auth.crypto_handler import verify_password, get_password_hash
+import uvicorn
+from app.auth.jwt_handler import signJWT, get_JWT_ID
+from app.auth.jwt_bearer import JWTBearer
+from app.auth.crypto_handler import verify_password, get_password_hash
 from . import crud, models, schemas
 from .database import SessionLocal, engine
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*'],
+    allow_credentials=True,
+    allow_methods=['*'],
+    allow_headers=['*']
+)
 
 # Dependency
 def get_db():
@@ -25,11 +33,13 @@ def get_db():
 # ------------------ SighUP ------------------
 @app.post("/users/signup" , tags=['User'])
 async def sign_up(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    if user.password != user.confirm_password:
+        raise HTTPException(status_code = 400, detail= 'Passwords are not matched, please enter matched passwords')
     db_user = crud.get_user_by_email(db=db, email=user.email)
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
     created = crud.create_user(db=db, user=user)
-    return {'access_token': signJWT(created.id),
+    return {'access_token': signJWT(created.id)['access_token'],
              'user': created}
 
 # ------------------- LOGIN -------------
@@ -39,20 +49,18 @@ async def login(user: schemas.UserLogIn, db: Session= Depends(get_db)):
     if db_user:
         if verify_password(user.password,db_user.hashed_password):
             return {
-                'access_token': signJWT(db_user.id) ,
+                'access_token': signJWT(db_user.id)['access_token'] ,
                 'user': db_user
             }
         else:
-            return {'Error': 'Invalid password'}
+            raise HTTPException(status_code=402, detail='Invalid password')
     else:
-        return {'Error': 'invalid email'}
+        raise HTTPException(status_code=402, detail='Invalid password')
     
 
 # ------------ GET USER PROFILE -------
-@app.get('/profile',tags=['User'], response_model=schemas.User)
+@app.get('/profile',response_model=schemas.User, tags=['User'])
 async def get_profile(user_token: Union[str, None] = Header(None),db: Session = Depends(get_db)):
-    print(user_token)
-    print(get_JWT_ID(user_token))
     if user_token:
         db_user = crud.get_user(db= db, user_id=get_JWT_ID(user_token))
         if db_user is None:
@@ -60,7 +68,39 @@ async def get_profile(user_token: Union[str, None] = Header(None),db: Session = 
         return db_user
     else:
         raise HTTPException(status_code=400, detail='No token provided!, please LogIn first')
+    
+    
+    
+# ---------------- EDIT USER PROFILE -----------
+@app.put('/profile',response_model= schemas.User, tags= ['User'])
+async def edit_profile(user_update:schemas.UserUpdate,user_token: Union[str,None] = Header(None), db: Session = Depends(get_db)):
+    if user_token:
+        print(get_JWT_ID(user_token))
+        db_user = crud.get_user(db=db,user_id=get_JWT_ID(user_token))
+        if db_user:
+            return crud.update_user(db = db,user_id= get_JWT_ID(user_token),user_update= user_update)
+        else:
+            raise HTTPException(status_code=402, detail='No user found' )
+    else:
+        raise HTTPException(status_code=401, detail="Not Authorized")
+        
 
+
+# -------- GET USER FEELINGS ---------------
+# , response_model=list[schemas.Feeling]
+@app.get('/users/feeling',tags=['User'])
+async def get_feelings(month:Union[int, None] = None,
+                       year:Union[int, None] = None,
+                       user_token:Union[str,None]= Header(None),
+                       db: Session = Depends(get_db)):
+    if user_token:
+        if not (month and year):
+            db_feelings = crud.get_all_feelings(user_id=get_JWT_ID(user_token), db=db)
+        else:
+            db_feelings = crud.get_monthly_feelings(db=db, id=get_JWT_ID(user_token), year=year, month=month)
+        return db_feelings
+    else:
+        raise HTTPException(status_code=401, detail="Not Authorized")
 
 
 # ------------ ALL USERS ------------
@@ -79,11 +119,12 @@ async def read_user(user_id: int, db: Session = Depends(get_db)):
     return db_user
 
 # -------------- Feelings ----------------
-@app.get('/feelings/', tags=['Feelings']) 
+@app.get('/feelings/', response_model= list[schemas.Feeling],tags=['Feelings']) 
 #TODO detirment the return type
-async def get_user_feelings(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    feelings = crud.get_all_feelings(db=db, skip=skip, limit=limit)
+async def get_all_feelings(db: Session = Depends(get_db)):
+    feelings = crud.get_all_feelings(db=db)
     return feelings
+
 
 @app.post('/seed{user_id}',tags=['Feelings'])
 async def seeds(user_id:int, db:Session = Depends(get_db)):
@@ -109,3 +150,12 @@ async def read_user_items( user_id: int , db: Session = Depends(get_db)):
 async def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     items = crud.get_items(db, skip=skip, limit=limit)
     return items
+
+
+
+
+
+
+
+
+

@@ -1,5 +1,6 @@
 import time
 import jwt
+from fastapi import HTTPException
 from decouple import config
 
 JWT_SECRET = config('SECRET_KEY')
@@ -30,4 +31,4 @@ def get_JWT_ID(token: str):
         decoded_token = jwt.decode(token, JWT_SECRET, JWT_ALGORITHM,verify_exp=False)
         return decoded_token['userId']
     except:
-        return {'problem with the token'}
+        raise HTTPException(status_code=402, detail= 'Unknown Token Provided' )
