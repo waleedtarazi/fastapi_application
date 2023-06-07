@@ -5,11 +5,8 @@ from datetime import datetime
 
 
 def get_all_feelings(db: Session, user_id:int = None):
-    print(" before user_id in all feelings(feelings service)")
     if user_id:
-        print(f'this is the user ID provided is : {user_id}')
         return db.query(mFeeling).filter(mFeeling.owner_id == user_id).all()
-    print(" in all feelings(feelings service)")
     return db.query(mFeeling).all()
     
 
@@ -44,7 +41,7 @@ def get_monthly_feelings(db: Session, id:int, year:int = 0, month:int = 0):
         
 def calculate_per_month(feelings: list[Feeling]):
     sad_ratio = 0
-    sad_ratio = sum(1 for feeling in feelings if feeling.title == 'sad')
+    sad_ratio = sum(1 for feeling in feelings if feeling.title == 'negative')
     if sad_ratio >= len(feelings) * .8:
         return {'user_status':'probably have some real disorder like depression'}
     elif sad_ratio >= len(feelings) *.5:

@@ -1,6 +1,7 @@
+python==3.9.1
 fastapi
 pydantic
-sqlalchamey
+sqlalchemy
 uvicorn[standard]
-python == 3.9.1
 jwt
+python-decouple

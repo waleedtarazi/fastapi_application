@@ -29,7 +29,7 @@ async def sign_up(user: UserCreate, db: Session = Depends(get_db_connection)):
              'user': created}
 
 # ------------------- LOGIN -------------
-@UserRouter.post('/login', tags=['User'])
+@UserRouter.post('/signin', tags=['User'])
 async def login(user: UserLogIn, db: Session= Depends(get_db_connection)):
     db_user = get_user_by_email(db, email=user.email)
     if db_user:
@@ -39,9 +39,9 @@ async def login(user: UserLogIn, db: Session= Depends(get_db_connection)):
                 'user': db_user
             }
         else:
-            raise HTTPException(status_code=402, detail='Invalid password')
+            raise HTTPException(status_code=400, detail='Invalid password')
     else:
-        raise HTTPException(status_code=402, detail='Invalid password')
+        raise HTTPException(status_code=400, detail='Invalid password')
     
 
 # ------------ GET USER PROFILE -------
@@ -53,7 +53,7 @@ async def get_profile(user_token: Union[str, None] = Header(None),db: Session = 
             raise HTTPException(status_code=404, detail="User not found")
         return db_user
     else:
-        raise HTTPException(status_code=400, detail='No token provided!, please LogIn first')
+        raise HTTPException(status_code=401, detail='No token provided!, please LogIn first')
     
     
     
@@ -66,7 +66,7 @@ async def edit_profile(user_update:UserUpdate,user_token: Union[str,None] = Head
         if db_user:
             return update_user(db = db,user_id= get_JWT_ID(user_token),user_update= user_update)
         else:
-            raise HTTPException(status_code=402, detail='No user found' )
+            raise HTTPException(status_code=404, detail='No user found' )
     else:
         raise HTTPException(status_code=401, detail="Not Authorized")
         
