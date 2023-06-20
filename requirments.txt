@@ -1,7 +1,11 @@
-python==3.9.1
 fastapi
 pydantic
 sqlalchemy
 uvicorn[standard]
-jwt
+pydantic[email]
+email-validator
+PyJWT
 python-decouple
+psycopg2
+passlib
+bcrypt
