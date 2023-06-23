@@ -2,8 +2,6 @@ fastapi
 pydantic
 sqlalchemy
 uvicorn[standard]
-pydantic[email]
-email-validator
 PyJWT
 python-decouple
 psycopg2

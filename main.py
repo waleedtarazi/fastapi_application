@@ -22,3 +22,7 @@ app.include_router(UserRouter)
 app.include_router(DashboardRouter)
 
 init()
+
+@app.get('/')
+async def initial():
+    return{'msg': 'Welcome to our application'}

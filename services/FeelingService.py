@@ -19,7 +19,10 @@ def creat_user_feeling(db: Session, feeleing: FeelingCreate, user_id:int):
     return db_item
 
 
-def get_monthly_feelings(db: Session, id:int, year:int = 0, month:int = 0):
+
+def get_monthly_feelings(db: Session, id:int, 
+                         year:int = 0, 
+                         month:int = 0):
     start_date = datetime(year=year, month=month,day=1)
     end_date = datetime(year=year, month=month+1, day=1)
     return db.query(mFeeling).filter(mFeeling.created_at > start_date, mFeeling.created_at < end_date).all()

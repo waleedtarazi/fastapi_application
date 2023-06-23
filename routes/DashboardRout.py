@@ -49,7 +49,7 @@ async def read_user(user_id: int, db: Session = Depends(get_db_connection)):
 @DashboardRouter.get('/testing', tags=['Dashboard'])
 async def get_mood(user_id: int, db: Session = Depends(get_db_connection)):
     if user_id:
-        user_feelings = await get_feelings(user_id=user_id,db=db)
+        user_feelings = await get_feelings(user_id=user_id, db=db)
         if user_feelings:
             dig = calculate_per_month(user_feelings)
             return dig
