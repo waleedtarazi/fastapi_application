@@ -7,8 +7,8 @@ from auth.crypto_handler import verify_password
 from db.database import get_db_connection
 from schemas.UserSchema import *
 from schemas.FeelingSchema import Feeling
-from services.UserService import *
-from services.FeelingService import get_all_feelings, get_monthly_feelings
+from services.Queries.UserService import *
+from services.Queries.FeelingService import get_all_feelings, get_monthly_feelings
 
 
 UserRouter = APIRouter(prefix="/user", tags=["User"])

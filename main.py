@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from models.BaseModel import init
+from models.BaseModel import initDB
+from services.Notifications.InitializeNotification import initNotifications
 from metadata.Tags import Tags
 from routes.UserRoute import UserRouter
 from routes.DashboardRout import DashboardRouter
@@ -21,8 +22,9 @@ app.add_middleware(CORSMiddleware,
 app.include_router(UserRouter)
 app.include_router(DashboardRouter)
 
-init()
+initDB()
+initNotifications()
 
 @app.get('/')
-async def initial():
+async def home_page():
     return{'msg': 'Welcome to our application'}
