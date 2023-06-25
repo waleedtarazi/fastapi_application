@@ -1,20 +1,13 @@
-from typing import Union
-import datetime
+from sqlalchemy import ForeignKey, Column, Integer, String
+from sqlalchemy.orm import relationship
+from Schemas.BaseSchema import EntityMeta
 
-from pydantic import BaseModel, EmailStr
+class Item(EntityMeta):
+    __tablename__ = "items"
 
-# ------------ item schemas -------------
-class ItemBase(BaseModel):
-    title: str
-    description: Union[str, None] = None
-
-
-class ItemCreate(ItemBase):
-    pass
-
-
-class Item(ItemBase):
-    id: int
-    owner_id: int
-    class Config:
-        orm_mode = True
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, index=True)
+    description = Column(String, index=True)
+    
+    owner_id = Column(Integer, ForeignKey("users.id"))
+    owner = relationship("User", back_populates="items")

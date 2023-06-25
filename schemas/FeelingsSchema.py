@@ -1,7 +1,7 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, Float, DateTime
 from sqlalchemy.orm import relationship
 import datetime
-from models.BaseModel import EntityMeta
+from Schemas.BaseSchema import EntityMeta
 
 
 class Feeling(EntityMeta):

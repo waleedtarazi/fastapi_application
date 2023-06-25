@@ -2,13 +2,13 @@ import re
 from typing import Union
 from fastapi import APIRouter, Depends, HTTPException, Header
 from sqlalchemy.orm import Session
-from auth.jwt_handler import signJWT, get_JWT_ID
-from auth.crypto_handler import verify_password
+from JWT.jwt_handler import signJWT, get_JWT_ID
+from JWT.crypto_handler import verify_password
 from db.database import get_db_connection
-from schemas.UserSchema import *
-from schemas.FeelingSchema import Feeling
-from services.Queries.UserService import *
-from services.Queries.FeelingService import get_all_feelings, get_monthly_feelings
+from Models.UserModel import *
+from Models.FeelingModel import Feeling
+from Repository.UserRepository import *
+from Repository.FeelingRepository import get_all_feelings, get_monthly_feelings
 
 
 UserRouter = APIRouter(prefix="/user", tags=["User"])

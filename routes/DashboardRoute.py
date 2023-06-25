@@ -2,13 +2,13 @@ from typing import Union, Optional
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-from services.Notifications.UserNotifications import send_notification
+from Services.Notifications.SendNotifications import send_notification
 from db.database import get_db_connection
-from schemas.UserSchema import User
-from schemas.FeelingSchema import Feeling
-from services.Queries.UserService import get_users, get_user
-from services.Queries.FeelingService import get_all_feelings as all_feelings
-from services.Queries.FeelingService import calculate_per_month
+from Models.UserModel import User
+from Models.FeelingModel import Feeling
+from Repository.UserRepository import get_users, get_user
+from Repository.FeelingRepository import get_all_feelings as all_feelings
+from Repository.FeelingRepository import calculate_per_month
 
 
 DashboardRouter = APIRouter(prefix="/dashboard", tags=["Dashboard"])

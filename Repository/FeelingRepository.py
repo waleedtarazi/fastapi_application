@@ -1,18 +1,18 @@
 from sqlalchemy.orm import Session
-from models.FeelingsModel import Feeling as mFeeling
-from schemas.FeelingSchema import FeelingCreate, Feeling
+from Schemas.FeelingsSchema import Feeling as SchemaFeeling
+from Models.FeelingModel import FeelingCreate, Feeling
 from datetime import datetime
 
 
 def get_all_feelings(db: Session, user_id:int = None):
     if user_id:
-        return db.query(mFeeling).filter(mFeeling.owner_id == user_id).all()
-    return db.query(mFeeling).all()
+        return db.query(SchemaFeeling).filter(SchemaFeeling.owner_id == user_id).all()
+    return db.query(SchemaFeeling).all()
     
 
 # -------------------------- Creat Feeling --------------------------
 def creat_user_feeling(db: Session, feeleing: FeelingCreate, user_id:int):
-    db_item = mFeeling(**feeleing.dict(), owner_id=user_id)
+    db_item = SchemaFeeling(**feeleing.dict(), owner_id=user_id)
     db.add(db_item)
     db.commit()
     db.refresh(db_item)
@@ -25,7 +25,7 @@ def get_monthly_feelings(db: Session, id:int,
                          month:int = 0):
     start_date = datetime(year=year, month=month,day=1)
     end_date = datetime(year=year, month=month+1, day=1)
-    return db.query(mFeeling).filter(mFeeling.created_at > start_date, mFeeling.created_at < end_date).all()
+    return db.query(SchemaFeeling).filter(SchemaFeeling.created_at > start_date, SchemaFeeling.created_at < end_date).all()
 
 
 # def seeding(db: Session, user_id:int):

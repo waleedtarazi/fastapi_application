@@ -1,43 +1,16 @@
-from pydantic import BaseModel
-from .FeelingSchema import Feeling
+from sqlalchemy import Boolean, Column, Integer, String
+from sqlalchemy.orm import relationship
+from Schemas.BaseSchema import EntityMeta
 
-class UserBase(BaseModel):
-    email: str
-    
-class UserLogIn(UserBase):
-    password: str
-    
-    class Config:
-        schema_extra = {
-            'example': {
-                'email': 'programmer@python.com',
-                'password' : 'IDK my password'
-            }
-        }
 
-class UserCreate(UserLogIn): 
-    name: str
-    confirm_password: str
+class User(EntityMeta):
+    __tablename__ = "users"
 
-    class Config:
-        schema_extra = {
-            "example": {
-                "name": "programmer",
-                "email": "programmer@python.com",
-                "password": "python",
-                "confirm_password": "python"
-            }
-        }
-    
-class UserUpdate(UserBase):
-    name: str
-    class Config:
-        orm_mode = True
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, unique=True, index=True)
+    name = Column(String)
+    hashed_password = Column(String)
+    is_active = Column(Boolean, default=True)
 
-class User(UserBase):
-    id: int
-    name: str
-    is_active: bool
-    feelings: list[Feeling] = []
-    class Config:
-        orm_mode = True
+    items = relationship("Item", back_populates="owner")
+    feelings = relationship('Feeling', back_populates= 'owner')

@@ -1,10 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from models.BaseModel import initDB
-from services.Notifications.InitializeNotification import initNotifications
-from metadata.Tags import Tags
-from routes.UserRoute import UserRouter
-from routes.DashboardRout import DashboardRouter
+from Schemas.BaseSchema import initDB
+from Services.Notifications.InitializeNotification import initNotifications
+from Metadata.Tags import Tags
+from Routes.UserRoute import UserRouter
+from Routes.DashboardRoute import DashboardRouter
+# from Routes.DashboardRoute import DashboardRouter
 
 
 app = FastAPI(
