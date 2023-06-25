@@ -1,5 +1,6 @@
 from typing import Union
-from pydantic import BaseModel, EmailStr
+
+from pydantic import BaseModel
 
 # ------------ item schemas -------------
 class ItemBase(BaseModel):
