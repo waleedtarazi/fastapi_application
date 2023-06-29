@@ -1,9 +1,8 @@
 from sqlalchemy.orm import Session
 from JWT.crypto_handler import get_password_hash
-from Schemas.ItemSchema import Item as SchemaItem 
 from Schemas.UserSchema import User as SchemaUser
 from Models.UserModel import UserCreate, UserUpdate
-from Models.ItemModel import ItemCreate
+
 
 
 def get_user(db: Session, user_id: int):
@@ -36,23 +35,6 @@ def update_user(db: Session, user_id: int ,user_update: UserUpdate):
     db.commit()
     db.refresh(user)
     return user
-    
-
-
-# ------------- item --------------
-def get_items(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(SchemaItem).\
-        offset(skip).limit(limit).all()
-
-def get_user_items(db: Session, id: int):
-    return db.query(SchemaItem).filter(SchemaItem.owner_id == id).all()
-
-def create_user_item(db: Session, item: ItemCreate, user_id: int):
-    db_item = SchemaItem(**item.dict(), owner_id=user_id)
-    db.add(db_item)
-    db.commit()
-    db.refresh(db_item)
-    return db_item
 
 
 

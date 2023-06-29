@@ -5,6 +5,7 @@ from Services.Notifications.InitializeNotification import initNotifications
 from Metadata.Tags import Tags
 from Routes.UserRoute import UserRouter
 from Routes.DashboardRoute import DashboardRouter
+from Routes.DoctorRoute import DoctorRouter
 from Services.Crons.dailyNotification import custom_scheduler
 
 
@@ -21,11 +22,11 @@ app.add_middleware(CORSMiddleware,
     allow_headers=['*'])
 
 app.include_router(UserRouter)
+app.include_router(DoctorRouter)
 app.include_router(DashboardRouter)
 
-print('Before init DB')
+
 initDB()
-print('After init DB')
 initNotifications()
 custom_scheduler()
 

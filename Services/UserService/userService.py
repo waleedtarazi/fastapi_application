@@ -11,7 +11,7 @@ from Repository.FeelingRepository import get_all_feelings, get_monthly_feelings
 
 email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
 
-async def Sign_Up(user: UserCreate, db: Session = Depends(get_db_connection)):
+async def Sign_Up(user, db):
     if not re.match(email_regex, user.email):
         raise HTTPException(status_code=400, detail='Invalid email address')
     if user.password != user.confirm_password:
@@ -25,7 +25,7 @@ async def Sign_Up(user: UserCreate, db: Session = Depends(get_db_connection)):
     return {'access_token': access_token, 'user': created_user}
 
 
-async def Log_In(user: UserLogIn, db: Session = Depends(get_db_connection)):
+async def Log_In(user, db):
     db_user = get_user_by_email(db, user.email)
     if db_user is None or not verify_password(user.password, db_user.hashed_password):
         raise HTTPException(status_code=400, detail='Invalid email or password.')
@@ -34,8 +34,7 @@ async def Log_In(user: UserLogIn, db: Session = Depends(get_db_connection)):
     return {'access_token': access_token, 'user': db_user}
 
 
-
-async def Get_Profile(user_token: str = Header(None), db: Session = Depends(get_db_connection)):
+async def Get_Profile(user_token, db):
     if not user_token:
         raise HTTPException(status_code=401, detail='No token provided. Please log in first.')
     
@@ -46,10 +45,9 @@ async def Get_Profile(user_token: str = Header(None), db: Session = Depends(get_
     return db_user
 
 
-async def Edit_Profile(user_update: UserUpdate, user_token: str = Header(None), db: Session = Depends(get_db_connection)):
+async def Edit_Profile(user_update, user_token, db):
     if not user_token:
         raise HTTPException(status_code=401, detail='Not authorized. Please log in first.')
-    
     user_id = get_JWT_ID(user_token)
     db_user = get_user(db=db, user_id=user_id)
     
@@ -59,11 +57,7 @@ async def Edit_Profile(user_update: UserUpdate, user_token: str = Header(None), 
     return update_user(db=db, user_id=user_id, user_update=user_update)
 
 
-
-async def Get_Feelings(month:Union[int, None] = None,
-                       year:Union[int, None] = None,
-                       user_token:str= Header(None),
-                       db: Session = Depends(get_db_connection)):
+async def Get_Feelings(month, year, user_token, db):
     if not user_token:
         raise HTTPException(status_code=401, detail="Not Authorized")
     if not (month and year):
