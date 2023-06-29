@@ -4,10 +4,8 @@ from sqlalchemy.orm import Session
 from db.database import get_db_connection
 from Models.UserModel import *
 from Models.FeelingModel import Feeling
-
-
-
 from Services.UserService.userService import Sign_Up, Log_In, Get_Profile, Edit_Profile, Get_Feelings
+
 
 UserRouter = APIRouter(prefix="/user", tags=["User"])
 email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'

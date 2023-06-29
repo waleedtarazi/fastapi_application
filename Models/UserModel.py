@@ -32,3 +32,10 @@ class UserUpdate(UserCreate):
     current_password : str = None
     class Config:
         orm_mode = True
+        
+class UserProfile(UserBase):
+    """ Represent values of user's profile """
+    name: str
+    age: int = None
+    
+    

@@ -1,17 +1,15 @@
 import re
-from typing import Union
-from fastapi import Depends, HTTPException, Header
-from sqlalchemy.orm import Session
+from typing import Dict, Union
+from fastapi import HTTPException
 from JWT.jwt_handler import signJWT, get_JWT_ID
 from JWT.crypto_handler import verify_password
-from db.database import get_db_connection
-from Models.UserModel import UserLogIn
+from Models.UserModel import UserProfile
 from Repository.UserRepository import *
 from Repository.FeelingRepository import get_all_feelings, get_monthly_feelings
 
 email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
 
-async def Sign_Up(user, db):
+async def Sign_Up(user, db) -> Dict[str, Union[str, UserProfile]]:
     if not re.match(email_regex, user.email):
         raise HTTPException(status_code=400, detail='Invalid email address')
     if user.password != user.confirm_password:
@@ -22,6 +20,8 @@ async def Sign_Up(user, db):
     
     created_user = create_user(db, user)
     access_token = signJWT(created_user.id)['access_token']
+    created_user = UserProfile(name=created_user.name, email=created_user.email, age=created_user.age)
+    
     return {'access_token': access_token, 'user': created_user}
 
 
