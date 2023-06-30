@@ -25,22 +25,25 @@ async def Sign_Up(user, db) -> Dict[str, Union[str, UserProfile]]:
     return {'access_token': access_token, 'user': created_user}
 
 
-async def Log_In(user, db):
+async def Log_In(user, db) -> Dict[str, Union[str, UserProfile]]:
     db_user = get_user_by_email(db, user.email)
     if db_user is None or not verify_password(user.password, db_user.hashed_password):
         raise HTTPException(status_code=400, detail='Invalid email or password.')
     
     access_token = signJWT(db_user.id)['access_token']
+    db_user = UserProfile(name=db_user.name, email=db_user.email, age=db_user.age)
     return {'access_token': access_token, 'user': db_user}
 
 
-async def Get_Profile(user_token, db):
+async def Get_Profile(user_token, db)-> Dict[str, UserProfile]:
     if not user_token:
         raise HTTPException(status_code=401, detail='No token provided. Please log in first.')
     
     db_user = get_user(db, get_JWT_ID(user_token))
     if not db_user:
         raise HTTPException(status_code=404, detail='User not found.')
+    
+    db_user = UserProfile(name=db_user.name, email=db_user.email, age=db_user.age)
     
     return db_user
 
@@ -54,7 +57,13 @@ async def Edit_Profile(user_update, user_token, db):
     if not db_user:
         raise HTTPException(status_code=404, detail='User not found.')
     
-    return update_user(db=db, user_id=user_id, user_update=user_update)
+    user_update_dict = {**vars(user_update)}
+    for key, value in user_update_dict.items():
+        if value is not (None and 0 and 'None') and getattr(db_user, key) != value:
+            setattr(db_user, key, value)
+    updated_user = update_user_db(db_user,db)
+    
+    return UserProfile(name= updated_user.name, email=updated_user.email, age=updated_user.age)
 
 
 async def Get_Feelings(month, year, user_token, db):

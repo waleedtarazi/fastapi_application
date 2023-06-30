@@ -28,10 +28,8 @@ def create_user(db: Session, user: UserCreate):
     db.refresh(db_user)
     return db_user
 
-def update_user(db: Session, user_id: int ,user_update: UserUpdate):
-    user = db.query(SchemaUser).filter(SchemaUser.id == user_id).first()
-    user.name = user_update.name
-    user.email = user_update.email
+def update_user_db(user, db: Session):
+    """Updates the user information for the specified user."""
     db.commit()
     db.refresh(user)
     return user

@@ -1,41 +1,43 @@
+from typing import Optional
 from pydantic import BaseModel
 from .FeelingModel import Feeling
 class UserBase(BaseModel):
-    email: str
-    
-class UserLogIn(UserBase):
-    password: str
-    
-
-class UserCreate(UserLogIn): 
-    name: str
-    age: int 
-    confirm_password: str
-
-class User(UserBase):
-    id: int
-    name: str
-    is_active: bool
-    feelings: list[Feeling] = []
-    fcm: str = None
-    doctor_id: int = None
-    
-    class Config:
-        orm_mode = True
-
-class DoctorUser(UserBase):
-    name: str
-    age: int
-    feelings: list[Feeling] = None     
-    
-class UserUpdate(UserCreate):
-    current_password : str = None
+    """the base line of User model"""
+    name: Optional[str] = None
+    age: Optional[int] = None
     class Config:
         orm_mode = True
         
+class UserLogIn(BaseModel):
+    """model when user LogIn"""
+    email: str
+    password: str
+    class Config:
+        orm_mode = True 
+    
+class UserCreate(UserLogIn, UserBase):
+    """Represent user model when Create new account"""
+    confirm_password: str 
+
+
+class UserUpdate(UserBase):
+    """Represent the user model while Editing his profile"""
+    current_password: Optional[str] = None
+    new_password: Optional[str] = None
+    confirm_new_password: Optional[str] = None
+    
+        
 class UserProfile(UserBase):
-    """ Represent values of user's profile """
-    name: str
-    age: int = None
+    """Represent the user's profile model"""
+    email: str
     
+class DoctorUser(UserProfile):
+    """Represent the user model when Doctor retrive users"""
+    feelings: list[Feeling] = []    
     
+class User(DoctorUser):
+    """Represent the whole user model"""
+    id: int
+    is_active: bool
+    fcm: str = None
+    doctor_id: int = None

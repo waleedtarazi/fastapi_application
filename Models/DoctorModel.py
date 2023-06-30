@@ -1,30 +1,37 @@
-from typing import Union
+from typing import Optional
 from pydantic import BaseModel
-from Models.UserModel import UserBase
+from Models.UserModel import UserProfile
 
-# ------------ Doctor schemas -------------
+
 class DoctorBase(BaseModel):
-    email: str
-
-class DoctorLogIn(DoctorBase):
-    password: str
-
-class DoctorCreate(DoctorLogIn):
-    email: str
-    confirm_password: str
-    name: str
-    phone: str = "None"
-    class Config:
-        orm_mode = True
-    
-class Doctor(DoctorCreate):
-    id: int
-    fcm: str = "None"
-    patients: list[UserBase] = []
+    """the base line of Doctor  model"""
+    name: Optional[str] = None
+    phone: Optional[str] = None
     class Config:
         orm_mode = True
         
-class DoctorUpdate(DoctorCreate):
-    current_password: str
-    pass
+class DoctorLogIn(BaseModel):
+    """model when Doctor Logs In"""
+    email: str
+    password: str
+    class Config:
+        orm_mode = True 
+
+class DoctorCreate(DoctorLogIn, DoctorBase):
+    """Represent user model when Create new account"""
+    confirm_password: str 
     
+class DoctorUpdate(DoctorBase):
+    """Represent the user model while Editing his profile"""
+    current_password: Optional[str] = None
+    new_password: Optional[str] = None
+    confirm_new_password: Optional[str] = None
+
+class DoctorProfile(DoctorBase):
+    """Represent the user's profile model"""
+    email: str
+
+class Doctor(DoctorProfile):
+    id: int
+    fcm: str = None
+    patients: list[UserProfile] = []

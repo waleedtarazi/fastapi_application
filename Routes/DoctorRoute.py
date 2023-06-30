@@ -27,12 +27,12 @@ async def login(doctor: DoctorLogIn, db: Session = Depends(get_db_connection)):
     return await Log_In(doctor, db)
     
 # Get Profile
-@DoctorRouter.get('/profile', response_model=Doctor, tags=['Doctor'])
+@DoctorRouter.get('/profile', tags=['Doctor'])
 async def get_profile(doctor_token: str = Header(None), db: Session = Depends(get_db_connection)):
     return await Get_Profile(doctor_token, db)
     
 # Edite Profile 
-@DoctorRouter.put('/profile', response_model=Doctor, tags=['Doctor'])
+@DoctorRouter.put('/profile', tags=['Doctor'])
 async def edit_profile(doctor_update: DoctorUpdate, doctor_token: str = Header(None), db: Session = Depends(get_db_connection)):
     return await Edit_Profile(doctor_update, doctor_token, db)
 

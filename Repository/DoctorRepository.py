@@ -27,10 +27,8 @@ def create_doctor(db: Session, doctor: DoctorCreate):
     db.refresh(db_doctor)
     return db_doctor
 
-def update_doctor(db: Session, doctor_id: int ,doctor_update: DoctorUpdate):
-    doctor = db.query(SchemaDoctor).filter(SchemaDoctor.id == doctor_id).first()
-    doctor.name = doctor_update.name
-    doctor.email = doctor_update.email
+def update_doctor_db(doctor, db: Session):
+    """Updates the Doctor information for the specified user."""
     db.commit()
     db.refresh(doctor)
     return doctor
