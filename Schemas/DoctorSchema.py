@@ -1,8 +1,20 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
+from Models.DoctorModel import DoctorCreate
 from Schemas.BaseSchema import EntityMeta
 
 class Doctor(EntityMeta):
+    
+    
+    @classmethod
+    def from_obj(cls, doctor: DoctorCreate, hash_password: str) -> "Doctor":
+        return cls(
+            name=doctor.name,
+            phone=doctor.phone,
+            email=doctor.email,
+            hashed_password=hash_password
+        )
+    
     __tablename__ = "doctors"
 
     id = Column(Integer, primary_key=True)

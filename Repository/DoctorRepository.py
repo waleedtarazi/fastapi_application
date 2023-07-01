@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from JWT.crypto_handler import get_password_hash
 from Schemas.DoctorSchema import Doctor as SchemaDoctor
-from Models.DoctorModel import DoctorCreate, DoctorUpdate
+from Models.DoctorModel import DoctorCreate
 
 
 def get_doctor(db: Session, doctor_id: int):
@@ -21,7 +21,7 @@ def get_doctors(db: Session, skip: int = 0, limit: int = 100):
 
 def create_doctor(db: Session, doctor: DoctorCreate):
     hashed_password = get_password_hash(doctor.password)
-    db_doctor = SchemaDoctor(email=doctor.email, hashed_password=hashed_password, name=doctor.name )
+    db_doctor = SchemaDoctor(email=doctor.email, hashed_password=hashed_password, name=doctor.name, phone=doctor.phone )
     db.add(db_doctor)
     db.commit()
     db.refresh(db_doctor)

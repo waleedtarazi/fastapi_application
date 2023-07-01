@@ -1,10 +1,22 @@
+from typing import Any
 from sqlalchemy import Boolean, Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
+from Models.UserModel import UserCreate
 from Schemas.BaseSchema import EntityMeta
 from Schemas.DoctorSchema import Doctor
 
 
 class User(EntityMeta):
+    
+    @classmethod
+    def from_obj(cls, user: UserCreate, hash_pass: str) -> "User":
+        return cls(
+            name=user.name,
+            age=user.age,
+            email=user.email,
+            hashed_password=hash_pass
+        )
+    
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)

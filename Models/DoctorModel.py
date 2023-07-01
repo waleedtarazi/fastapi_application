@@ -1,6 +1,6 @@
 from typing import Optional
 from pydantic import BaseModel
-from Models.UserModel import UserProfile
+from Models.UserModel import DoctorUser, UserProfile
 
 
 class DoctorBase(BaseModel):
@@ -30,6 +30,15 @@ class DoctorUpdate(DoctorBase):
 class DoctorProfile(DoctorBase):
     """Represent the user's profile model"""
     email: str
+    
+    @classmethod
+    def from_obj(cls, doctor) -> "DoctorProfile":
+        return cls(
+            name=doctor.name,
+            phone=doctor.phone,
+            email=doctor.email,
+        )
+    
 
 class Doctor(DoctorProfile):
     id: int

@@ -31,6 +31,15 @@ class UserProfile(UserBase):
     """Represent the user's profile model"""
     email: str
     
+    @classmethod
+    def from_obj(cls, user) -> "UserProfile":
+        return cls(
+            name=user.name,
+            age=user.age,
+            email=user.email,
+        )
+    
+    
 class DoctorUser(UserProfile):
     """Represent the user model when Doctor retrive users"""
     feelings: list[Feeling] = []    

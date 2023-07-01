@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from JWT.crypto_handler import get_password_hash
 from Schemas.UserSchema import User as SchemaUser
-from Models.UserModel import UserCreate, UserUpdate
+from Models.UserModel import UserCreate
 
 
 
