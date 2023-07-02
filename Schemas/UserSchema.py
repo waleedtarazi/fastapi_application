@@ -1,7 +1,7 @@
 from typing import Any
 from sqlalchemy import Boolean, Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
-from Models.UserModel import UserCreate
+from Models.UserModel import UserCreate, UserProfile
 from Schemas.BaseSchema import EntityMeta
 from Schemas.DoctorSchema import Doctor
 
@@ -15,6 +15,14 @@ class User(EntityMeta):
             age=user.age,
             email=user.email,
             hashed_password=hash_pass
+        )
+        
+    @classmethod
+    def from_profile(cls, user: UserProfile) -> "User":
+        return cls(
+            name=user.name,
+            age=user.age,
+            email=user.email,
         )
     
     __tablename__ = "users"
@@ -32,3 +40,4 @@ class User(EntityMeta):
     doctor = relationship('Doctor', back_populates= 'patients')
     
     feelings = relationship('Feeling', back_populates= 'owner')
+    requests = relationship("Request", back_populates="user")

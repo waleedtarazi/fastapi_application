@@ -25,3 +25,4 @@ class Doctor(EntityMeta):
     fcm = Column(String, index= True)
     
     patients = relationship("User", back_populates="doctor")
+    requests = relationship("Request", back_populates="doctor")

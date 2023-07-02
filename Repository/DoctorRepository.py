@@ -1,6 +1,8 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, subqueryload
 from JWT.crypto_handler import get_password_hash
 from Schemas.DoctorSchema import Doctor as SchemaDoctor
+from Schemas.UserSchema import User as SchemaUser
+from Schemas.RequestSchema import Request as SchemaRequest
 from Models.DoctorModel import DoctorCreate
 
 
@@ -32,7 +34,43 @@ def update_doctor_db(doctor, db: Session):
     db.commit()
     db.refresh(doctor)
     return doctor
+
+
+def get_all_requests_db(doctor_id: int, db: Session, on_status: str):
+    """ get all Requests for the doctor """
+    requests = db.query(SchemaRequest)\
+    .options(subqueryload(SchemaRequest.user), subqueryload(SchemaRequest.doctor))\
+    .filter(SchemaRequest.doctor_id == doctor_id)\
+    .filter(SchemaRequest.status == on_status)\
+    .all()
     
+    # requests = db.query(SchemaRequest)\
+    #     .filter(SchemaDoctor.id == doctor_id)\
+    #     .all()
+    
+    return requests
+
+
+def get_a_request_db(doctor_id: int, request_id:int, db: Session):
+    """ get a specific Request """
+    request = db.query(SchemaRequest)\
+        .filter(SchemaRequest.id == request_id)\
+        .filter(SchemaDoctor.id == doctor_id)\
+        .first()
+        # the prvious but not working
+        # .join(SchemaUser)\
+        # .join(SchemaDoctor)\
+        # .filter(SchemaRequest.id == request_id)\
+        # .filter(SchemaDoctor.id == 1)\
+        # .first()
+        
+        # i dont know the below
+        # .filter(Request.doctor_id == doctor_id)\
+        # .filter(Request.user_id == user_id)\
+        # .filter(Request.status == 'open')\
+        # .all()   
+        
+    return request
 
 
 

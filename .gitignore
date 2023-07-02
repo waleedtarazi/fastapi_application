@@ -1,4 +1,6 @@
 app/.env
+Migrations/*
+alembic.ini
 .vscode
 __pycache__/
 */__pycache__/

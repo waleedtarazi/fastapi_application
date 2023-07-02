@@ -4,6 +4,7 @@ from db.database import get_db_connection
 from Models.UserModel import DoctorUser
 from Models.DoctorModel import *
 from Services.DoctorService.doctorService import Get_Patients
+from Services.DoctorService.HandleRequests import respons_to_request, Get_Requests
 
 from Services.auth.auth import Sign_Up_client, Log_In_client, Edit_Profile_client, Get_Profile_client
 from Schemas.DoctorSchema import Doctor as ShemaDoctor
@@ -41,4 +42,14 @@ async def edit_profile(doctor_update: DoctorUpdate, doctor_token: str = Header(N
 async def get_patients(doctor_token: str = Header(None), db: Session = Depends(get_db_connection)):
     return await Get_Patients(doctor_token, db)
 
-# Get Appoitments
+#* update request status
+@DoctorRouter.put("/update_request", tags=['Doctor'])
+async def update_request(doctor_response: str, request_id: int, doctor_token: str = Header(None), db: Session = Depends(get_db_connection)):
+    updated_request = await respons_to_request(doctor_token,request_id, doctor_response, db)
+    return updated_request
+
+#* Get all requests 
+@DoctorRouter.get("/my_requests", tags=['Doctor'])
+async def get_requests(on_status:str, doctor_token: str = Header(None), db: Session = Depends(get_db_connection)):
+    updated_request = await Get_Requests(on_status, doctor_token, db)
+    return updated_request
