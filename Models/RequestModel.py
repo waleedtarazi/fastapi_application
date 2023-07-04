@@ -14,11 +14,11 @@ class RequestInformation(BaseModel):
     """ Model contain important informations of request"""
 
     @classmethod
-    def from_obj(cls,user, doctor, request) -> "RequestInformation":
+    def from_obj(cls, request) -> "RequestInformation":
         return cls(
            date = request.time_created,
-            user_name = user.name,
-            doctor_name=doctor.name,
+            user_name = request.user.name,
+            doctor_name=request.doctor.name,
             status = request.status,
         )
         

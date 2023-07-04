@@ -16,7 +16,7 @@ def make_request_with_doctor(user_token: str, doctor_id: int, db: Session):
         db_request = create_request_db(request, db)
         user = get_client_db(db, user_id, SchemaUser)
         doctor = get_client_db(db, doctor_id, SchemaDoctor)
-        request_info = RequestInformation.from_obj(user,doctor,db_request)
+        request_info = RequestInformation.from_obj(db_request)
         return request_info
     else:
         raise HTTPException(status_code=402, detail='not authroized')

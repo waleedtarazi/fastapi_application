@@ -5,7 +5,7 @@ from Models.UserModel import DoctorUser
 from Models.DoctorModel import *
 from Services.DoctorService.doctorService import Get_Patients
 from Services.DoctorService.HandleRequests import respons_to_request, Get_Requests
-
+from Schemas.RequestSchema import RequestStatus
 from Services.auth.auth import Sign_Up_client, Log_In_client, Edit_Profile_client, Get_Profile_client
 from Schemas.DoctorSchema import Doctor as ShemaDoctor
 # Router
@@ -44,7 +44,8 @@ async def get_patients(doctor_token: str = Header(None), db: Session = Depends(g
 
 #* update request status
 @DoctorRouter.put("/update_request", tags=['Doctor'])
-async def update_request(doctor_response: str, request_id: int, doctor_token: str = Header(None), db: Session = Depends(get_db_connection)):
+async def update_request(doctor_response: RequestStatus , request_id: int, doctor_token: str = Header(None), db: Session = Depends(get_db_connection)):
+    #! send notification to user informing him about the state of the request
     updated_request = await respons_to_request(doctor_token,request_id, doctor_response, db)
     return updated_request
 

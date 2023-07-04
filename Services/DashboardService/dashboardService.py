@@ -2,6 +2,7 @@ from typing import Union
 from fastapi import Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
+from Repository.DoctorRepository import get_doctor, get_doctors
 from Services.UserService.userService import Get_Feelings
 from Services.Notifications.SendNotifications import send_notification
 from db.database import get_db_connection
@@ -13,6 +14,11 @@ from Models.NotificationModel import Notificatoin
 
 async def Read_All_Users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db_connection)):
     users = get_users(db, skip=skip, limit=limit)
+    return users
+
+
+async def Read_All_Doctors(skip: int = 0, limit: int = 100, db: Session = Depends(get_db_connection)):
+    users = get_doctors(db, skip=skip, limit=limit)
     return users
 
 
@@ -32,6 +38,12 @@ async def Read_User(user_id: int, db: Session = Depends(get_db_connection)):
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
+
+async def Read_Doctor(doctor_id: int, db: Session = Depends(get_db_connection)):
+    db_doctor = get_doctor(db, doctor_id)
+    if db_doctor is None:
+        raise HTTPException(status_code=404, detail="Doctor not found")
+    return db_doctor
 
 
 
