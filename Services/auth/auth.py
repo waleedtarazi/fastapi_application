@@ -27,7 +27,7 @@ async def Sign_Up_client(client: Union[UserCreate,DoctorCreate], db: Session) ->
     else:
         raise HTTPException(status_code=400, detail=f"Invalid Account type: {type(client)}")
 
-    return {'access_token': access_token, 'profile': created_profile}
+    return {'access_token': access_token, 'client': created_profile}
             
 
 async def Log_In_client(client: Union[UserLogIn,DoctorLogIn], db: Session, type_ = Union[SchemaUser, SchemaDoctor]) -> Dict[str, Union[str, UserProfile, DoctorProfile]]:
@@ -39,7 +39,7 @@ async def Log_In_client(client: Union[UserLogIn,DoctorLogIn], db: Session, type_
     access_token = signJWT(db_client.id)['access_token']
     
     db_client = convert_schema_profile(db_client)    
-    return {'access_token': access_token, 'user': db_client}
+    return {'access_token': access_token, 'client': db_client}
     
 
 async def Get_Profile_client(client_token: str, db: Session, type_ = Union[SchemaUser, SchemaDoctor])-> Union[UserProfile, DoctorProfile]:

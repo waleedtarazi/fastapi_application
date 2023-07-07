@@ -1,5 +1,7 @@
 from typing import Optional
 from pydantic import BaseModel
+
+from Models.RequestModel import RequestInformation, UserRequest
 from .FeelingModel import Feeling
 class UserBase(BaseModel):
     """the base line of User model"""
@@ -47,6 +49,7 @@ class DoctorUser(UserProfile):
 class User(DoctorUser):
     """Represent the whole user model"""
     id: int
-    is_active: bool
     fcm: str = None
     doctor_id: int = None
+    requests: list[UserRequest]
+    is_active: bool

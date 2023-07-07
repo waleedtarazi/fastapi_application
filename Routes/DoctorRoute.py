@@ -51,6 +51,6 @@ async def update_request(doctor_response: RequestStatus , request_id: int, docto
 
 #* Get all requests 
 @DoctorRouter.get("/my_requests", tags=['Doctor'])
-async def get_requests(on_status:str, doctor_token: str = Header(None), db: Session = Depends(get_db_connection)):
-    updated_request = await Get_Requests(on_status, doctor_token, db)
+async def get_requests(doctor_token: str = Header(None), on_status:Optional[str] = 'all', db: Session = Depends(get_db_connection)):
+    updated_request = await Get_Requests(doctor_token, on_status, db)
     return updated_request

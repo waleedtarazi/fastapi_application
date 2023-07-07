@@ -1,14 +1,18 @@
 from pydantic import BaseModel
-
-from Schemas.RequestSchema import Request
-from .UserModel import UserProfile
-
 from datetime import datetime
+from Schemas.RequestSchema import RequestStatus
 
 class UserAddRequst(BaseModel):
     """The model when user send request to doctor"""
     doctor_id: int
     user_id: int
+    
+class UserRequest(UserAddRequst):
+    id: int
+    time_created: datetime
+    status: RequestStatus
+    class Config:
+        orm_mode = True
     
 class RequestInformation(BaseModel):
     """ Model contain important informations of request"""
@@ -16,16 +20,19 @@ class RequestInformation(BaseModel):
     @classmethod
     def from_obj(cls, request) -> "RequestInformation":
         return cls(
-           date = request.time_created,
+            request_id = request.id,
+            date = request.time_created,
             user_name = request.user.name,
             doctor_name=request.doctor.name,
             status = request.status,
         )
-        
+    request_id: int    
     date: datetime
     user_name: str
     doctor_name: str
-    status: str  
+    status: str
+    class Config:
+        orm_mode = True
         
     
     

@@ -23,11 +23,13 @@ def get_doctors(db: Session, skip: int = 0, limit: int = 100):
 
 def create_doctor(db: Session, doctor: DoctorCreate):
     hashed_password = get_password_hash(doctor.password)
-    db_doctor = SchemaDoctor(email=doctor.email, hashed_password=hashed_password, name=doctor.name, phone=doctor.phone )
+    db_doctor = SchemaDoctor(
+        email=doctor.email, hashed_password=hashed_password, name=doctor.name, phone=doctor.phone)
     db.add(db_doctor)
     db.commit()
     db.refresh(db_doctor)
     return db_doctor
+
 
 def update_doctor_db(doctor, db: Session):
     """Updates the Doctor information for the specified user."""
@@ -37,41 +39,46 @@ def update_doctor_db(doctor, db: Session):
 
 
 def get_all_requests_db(doctor_id: int, db: Session, on_status: str):
-    """ get all Requests for the doctor """
-    requests = db.query(SchemaRequest)\
-    .options(subqueryload(SchemaRequest.user), subqueryload(SchemaRequest.doctor))\
-    .filter(SchemaRequest.doctor_id == doctor_id)\
-    .filter(SchemaRequest.status == on_status)\
-    .all()
+    """
+    Retrieves requests from the database based on the given doctor ID and requests status.
     
-    # requests = db.query(SchemaRequest)\
-    #     .filter(SchemaDoctor.id == doctor_id)\
-    #     .all()
+    Args:
+        doctor_id (int): The ID of the doctor.
+        on_status (str): The status to `filter` requests on.
+            if `on_status` is equal to `None` or `all` it will not filter, just all request
+        db (Session): The database session.
     
+    Returns:
+        List of request (SchemaRequest): The specific requests depending on the `status` .
+    """
+
+    query = db.query(SchemaRequest)\
+        .options(subqueryload(SchemaRequest.user), subqueryload(SchemaRequest.doctor))\
+        .filter(SchemaRequest.doctor_id == doctor_id).order_by(SchemaRequest.id)
+
+    if on_status is not None and on_status != 'all':
+        query = query.filter(SchemaRequest.status == on_status)
+
+    requests = query.all()
+
     return requests
 
 
-def get_a_request_db(doctor_id: int, request_id:int, db: Session):
-    """ get a specific Request """
+def get_a_request_db(doctor_id: int, request_id: int, db: Session):
+    """
+    Retrieves a specific request from the database based on the given doctor ID and request ID.
+    
+    Args:
+        doctor_id (int): The ID of the doctor.
+        request_id (int): The ID of the request.
+        db (Session): The database session.
+    
+    Returns:
+        request (SchemaRequest): The specific request object.
+    """
+    
     request = db.query(SchemaRequest)\
         .filter(SchemaRequest.id == request_id)\
         .filter(SchemaDoctor.id == doctor_id)\
         .first()
-        # the prvious but not working
-        # .join(SchemaUser)\
-        # .join(SchemaDoctor)\
-        # .filter(SchemaRequest.id == request_id)\
-        # .filter(SchemaDoctor.id == 1)\
-        # .first()
-        
-        # i dont know the below
-        # .filter(Request.doctor_id == doctor_id)\
-        # .filter(Request.user_id == user_id)\
-        # .filter(Request.status == 'open')\
-        # .all()   
-        
     return request
-
-
-
-

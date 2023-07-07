@@ -8,7 +8,7 @@ from Models.RequestModel import RequestInformation
 
 
 def update_request_status(request: SchemaRequest, new_status: RequestStatus):
-        
+    """Update the request status"""
     if not request:
         raise HTTPException(status_code=404, detail="Request not found")
     
@@ -20,12 +20,11 @@ def update_request_status(request: SchemaRequest, new_status: RequestStatus):
     if request.status == RequestStatus.ACCEPTED:
         request.doctor.patients.append(request.user)
 
-        
     return request
 
 
 async def respons_to_request(doctor_token: str, request_id: int, response: RequestStatus, db: Session):
-    
+    """Response to the request depening on what doctor sent(accept, denied, pinning)"""
     doctor_id = get_JWT_ID(doctor_token)
     
     request = get_a_request_db(doctor_id, request_id, db)
