@@ -11,4 +11,8 @@ Tags = [
         "name": "Dashboard",
         "description": "Contains CRUD operation for Dashboard",
     },
+    {
+        "name": "Sentiment",
+        "description": "Contains the operation of predicting Sentiment from user's message",
+    },
 ]

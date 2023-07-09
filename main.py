@@ -6,6 +6,7 @@ from Metadata.Tags import Tags
 from Routes.UserRoute import UserRouter
 from Routes.DashboardRoute import DashboardRouter
 from Routes.DoctorRoute import DoctorRouter
+from Routes.SentimentRoute import SentimentRouter 
 from Services.Crons.dailyNotification import custom_scheduler
 
 
@@ -23,6 +24,7 @@ app.add_middleware(CORSMiddleware,
 
 app.include_router(UserRouter)
 app.include_router(DoctorRouter)
+app.include_router(SentimentRouter)
 app.include_router(DashboardRouter)
 
 
