@@ -6,5 +6,6 @@ from db.database import Engine
 EntityMeta = declarative_base()
 
 
-def initDB():
+def init_db():
+    """initilize the Database connection"""
     EntityMeta.metadata.create_all(bind=Engine)

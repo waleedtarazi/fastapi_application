@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from Schemas.BaseSchema import initDB
+from Schemas.BaseSchema import init_db
 from Services.Notifications.InitializeNotification import initNotifications
 from Metadata.Tags import Tags
 from Routes.UserRoute import UserRouter
@@ -28,7 +28,7 @@ app.include_router(SentimentRouter)
 app.include_router(DashboardRouter)
 
 
-initDB()
+init_db()
 initNotifications()
 custom_scheduler()
 

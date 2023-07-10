@@ -2,12 +2,12 @@ import time
 import jwt
 from fastapi import HTTPException
 from decouple import config
-
+from typing import Dict
 JWT_SECRET = config('SECRET_KEY')
 JWT_ALGORITHM = config('ALGORITHM')
 
 # return generated tokens(JWT)
-def token_response(token: str):
+def token_response(token: str) -> Dict[str,str]:
     return{
         'access_token': token
     }
