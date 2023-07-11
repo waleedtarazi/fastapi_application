@@ -12,4 +12,4 @@ def index():
 
 @SentimentRouter.post('/predict_sentiment', status_code= 200)
 async def predict(input_text: SentimentInput):
-    return  make_prediction(input_text.text)
+    return  await make_prediction(input_text.text)
