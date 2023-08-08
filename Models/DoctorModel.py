@@ -30,6 +30,7 @@ class DoctorUpdate(DoctorBase):
 class DoctorProfile(DoctorBase):
     """Represent the user's profile model"""
     email: str
+    id: int
     
     @classmethod
     def from_obj(cls, doctor) -> "DoctorProfile":
@@ -37,10 +38,10 @@ class DoctorProfile(DoctorBase):
             name=doctor.name,
             phone=doctor.phone,
             email=doctor.email,
+            id = doctor.id
         )
     
 
 class Doctor(DoctorProfile):
-    id: int
     fcm: str = None
     patients: list[UserProfile] = []
