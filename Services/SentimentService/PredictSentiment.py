@@ -15,6 +15,7 @@ sentiment_model = pipeline('text-classification', model='CAMeL-Lab/bert-base-ara
 
 async def make_prediction(text: str) -> Dict[str, Union[str, int]]:
     result = sentiment_model(text)[0]
-    label = result['label']
+    label_id = result['label']
+    label = sentiment_labels[label_id]
     score = result['score']
     return {"text": text ,"label": label, "score": score}
