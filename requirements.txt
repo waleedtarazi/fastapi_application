@@ -10,3 +10,4 @@ bcrypt
 firebase-admin
 APScheduler
 alembic
+transformers
