@@ -5,12 +5,14 @@ from JWT.crypto_handler import get_password_hash, verify_password
 from JWT.jwt_handler import  signJWT
 from Models.DoctorModel import DoctorCreate,  DoctorProfile, DoctorUpdate
 from Models.UserModel import UserCreate, UserProfile, UserUpdate
+from Repository.ActivityRepository import get_activities
+from Repository.UserRepository import get_user_by_email, update_user_db
 from Repository.auth import create_client_db, get_client_by_email, update_client_db
 from Schemas.DoctorSchema import Doctor as SchemaDoctor
 from Schemas.UserSchema import User as SchemaUser
  
     
-def create_clinet(db: Session, client: Union[UserCreate, DoctorCreate], type_: Union[Type[SchemaUser], Type[SchemaDoctor]]) -> Union[str, UserProfile, DoctorProfile]:
+async def create_clinet(db: Session, client: Union[UserCreate, DoctorCreate], type_: Union[Type[SchemaUser], Type[SchemaDoctor]]) -> Union[str, UserProfile, DoctorProfile]:
     db_obj = get_client_by_email(db, client.email, type_)
     if db_obj:
         raise HTTPException(status_code=400, detail='Email already registered.')
@@ -21,6 +23,10 @@ def create_clinet(db: Session, client: Union[UserCreate, DoctorCreate], type_: U
         created_profile = DoctorProfile.from_obj(created_obj)
     else:
         created_profile = UserProfile.from_obj(created_obj)
+        user =  get_user_by_email(db, created_profile.email)
+        activites =  get_activities(db)
+        user.activities = activites 
+        _ = update_user_db(user, db)
     return access_token, created_profile
 
 

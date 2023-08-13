@@ -31,7 +31,9 @@ class User(EntityMeta):
     phone = Column(String(length=10), index =True)
     fcm = Column(String, index= True)
     is_active = Column(Boolean, default=True)
+    
     doctor_id = Column(Integer, ForeignKey('doctors.id'))
     doctor = relationship('Doctor', back_populates= 'patients')
     feelings = relationship('Feeling', back_populates= 'owner')
     requests = relationship("Request", back_populates="user")
+    activities = relationship("Activity", secondary="user_activities", back_populates='users')

@@ -33,7 +33,3 @@ def update_user_db(user, db: Session):
     db.commit()
     db.refresh(user)
     return user
-
-
-
-

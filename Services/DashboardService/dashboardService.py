@@ -2,6 +2,7 @@ from typing import Union
 from fastapi import Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
+from Models.ActivityModel import ActivityCreate
 from Repository.DoctorRepository import get_doctor, get_doctors
 from Services.UserService.userService import Get_Feelings
 from Services.Notifications.SendNotifications import send_notification
@@ -9,7 +10,9 @@ from db.database import get_db_connection
 from Repository.UserRepository import get_users, get_user
 from Repository.FeelingRepository import get_all_feelings as all_feelings
 from Repository.FeelingRepository import calculate_per_month
+from Repository.ActivityRepository import add_activity, get_activities
 from Models.NotificationModel import Notificatoin
+from Schemas.ActivitySchema import Activity as SchemaActivity
 
 
 async def Read_All_Users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db_connection)):
@@ -56,12 +59,19 @@ async def Get_Mood(user_id: int, db: Session = Depends(get_db_connection)):
         raise HTTPException(status_code=400, detail="There's no enough data to calculate the Mood")
     raise HTTPException(status_code=402, detail="User not found")
 
+async def add_users_activity(activity: ActivityCreate, db: Session = Depends(get_db_connection)):
+    schema_activity = SchemaActivity(title= activity.title,weight= activity.weight, type=activity.type)
+    db_activity = add_activity(schema_activity, db)
+    return db_activity
 
+async def get_all_activities(db:Session):
+    return get_activities(db)
 
 # Send notifications 
 class Req(BaseModel):
     title: str
     body: str
+
 async def Send_FCM_Notification(notification: Notificatoin):
     #!  Get FCM from user table by ID
     if  not notification.title or not notification.body:

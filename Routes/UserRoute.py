@@ -6,7 +6,7 @@ from Services.UserService.userService import *
 from db.database import get_db_connection
 from Models.UserModel import *
 from Models.FeelingModel import Feeling
-from Models.RequestModel import UserAddRequst
+from Models.ActivityModel import Activity
 from Services.auth.auth import Sign_Up_client, Log_In_client, Edit_Profile_client, Get_Profile_client
 from Schemas.UserSchema import User as SchemaUser
 
@@ -52,3 +52,14 @@ async def make_doctor_request(doctor_id: int, user_token: str = Header(None), db
     request_db = make_request_with_doctor(user_token, doctor_id, db)
     if request_db:
         return {"request": request_db}
+    
+#* Get Activities
+@UserRouter.get('/activity', tags=['User'])
+async def get_activities(user_token: str = Header(None), db: Session = Depends(get_db_connection)):
+    return await Get_Activites(user_token, db)
+
+#* Update Activity weight value 
+@UserRouter.put('/update_activity', tags=["User"])
+async def update_activity(added_weight: int, activity_id: int, user_token: str = Header(None), db: Session = Depends(get_db_connection)):
+    updated_activity = await Update_Activity_Weight(user_token=user_token, activity_id=activity_id, added_weight=added_weight, db=db)
+    return updated_activity

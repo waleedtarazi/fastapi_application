@@ -21,9 +21,9 @@ async def Sign_Up_client(client: Union[UserCreate,DoctorCreate], db: Session) ->
         raise HTTPException(status_code=400, detail='Passwords do not match. Please enter matching passwords.')
     
     if isinstance(client, UserCreate):
-        access_token, created_profile = create_clinet(db, client, SchemaUser)
+        access_token, created_profile = await create_clinet(db, client, SchemaUser)
     elif isinstance(client, DoctorCreate):
-        access_token, created_profile = create_clinet(db, client, SchemaDoctor)
+        access_token, created_profile = await create_clinet(db, client, SchemaDoctor)
     else:
         raise HTTPException(status_code=400, detail=f"Invalid Account type: {type(client)}")
 

@@ -1,5 +1,6 @@
 from typing import Union
 from sqlalchemy.orm import Session
+from Models.ActivityModel import ActivityCreate
 from Models.DoctorModel import Doctor, DoctorProfile
 from Models.NotificationModel import Notificatoin
 from db.database import get_db_connection
@@ -15,7 +16,9 @@ from Services.DashboardService.dashboardService import (
     Read_Doctor, 
     Read_User, 
     Get_Mood,
-    Send_FCM_Notification) 
+    Send_FCM_Notification,
+    add_users_activity,
+    get_all_activities) 
 
 DashboardRouter = APIRouter(prefix="/dashboard", tags=["Dashboard"])
 
@@ -59,3 +62,13 @@ async def get_mood(user_id: int, db: Session = Depends(get_db_connection)):
 @DashboardRouter.post("/send-notification", tags=['Dashboard'])
 async def send_fcm_notification(notification: Notificatoin):
     return await Send_FCM_Notification(notification)
+
+#* get all activities
+@DashboardRouter.get('/activities', tags=['Dashboard'])
+async def all_activities(db: Session = Depends(get_db_connection)):
+    return await get_all_activities(db)
+
+#* add an activity to all users
+@DashboardRouter.post("/activities/add", tags=['Dashboard'])
+async def add_activity_all_users(activity: ActivityCreate, db: Session = Depends(get_db_connection)):
+    return await add_users_activity(activity=activity, db=db)
