@@ -10,14 +10,14 @@ class UserBase(BaseModel):
     phone: Optional[str] = None
     living_location : Optional[str] = None
     class Config:
-        orm_mode = True
+        from_attributes = True
         
 class UserLogIn(BaseModel):
     """model when user LogIn"""
     email: str
     password: str
     class Config:
-        orm_mode = True 
+        from_attributes = True 
     
 class UserCreate(UserLogIn, UserBase):
     """Represent user model when Create new account"""

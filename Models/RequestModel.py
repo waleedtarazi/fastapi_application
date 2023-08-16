@@ -13,7 +13,7 @@ class UserRequest(UserAddRequst):
     time_created: datetime
     status: RequestStatus
     class Config:
-        orm_mode = True
+        from_attributes = True
     
 class RequestInformation(BaseModel):
     """ Model contain important informations of request"""
@@ -35,7 +35,7 @@ class RequestInformation(BaseModel):
     status: str
     description: str
     class Config:
-        orm_mode = True
+        from_attributes = True
         
     
     

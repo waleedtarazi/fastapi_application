@@ -9,4 +9,4 @@ passlib
 bcrypt
 firebase-admin
 APScheduler
-alembic
+fastapi-mail

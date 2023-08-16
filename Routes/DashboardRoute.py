@@ -1,10 +1,10 @@
 from typing import Union
 from sqlalchemy.orm import Session
 from Models.ActivityModel import ActivityCreate
-from Models.DoctorModel import Doctor, DoctorProfile
+from Models.EmailModel import Email
 from Models.NotificationModel import Notificatoin
+from Services.mail.send_email import send_email
 from db.database import get_db_connection
-from Models.UserModel import User
 from Models.FeelingModel import Feeling
 from fastapi import (APIRouter, 
                      Depends, 
@@ -28,12 +28,12 @@ def index():
 
 
 #* Get all useres 
-@DashboardRouter.get("/users", response_model= list[User],tags=['Dashboard'])
+@DashboardRouter.get("/users", tags=['Dashboard'])
 async def read_all_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db_connection)):
     return await Read_All_Users(skip, limit, db)
 
 #* Get all doctors
-@DashboardRouter.get('/doctors', response_model=list[DoctorProfile], tags=['Dashboard'])
+@DashboardRouter.get('/doctors',  tags=['Dashboard'])
 async def read_all_doctors(skip: int = 0, limit: int = 100, db: Session = Depends(get_db_connection)):
     return await Read_All_Doctors(skip, limit, db)
 
@@ -44,12 +44,12 @@ async def get_feelings(user_id: Union[int, None] = None, db: Session = Depends(g
 
 
 #* Get a specific User 
-@DashboardRouter.get("/user", response_model=User, tags=['Dashboard'])
+@DashboardRouter.get("/user", tags=['Dashboard'])
 async def get_user(user_id: int, db: Session = Depends(get_db_connection)):
     return await Read_User(user_id, db)
 
 #* Get a specific Doctor 
-@DashboardRouter.get("/doctor", response_model=Doctor, tags=['Dashboard'])
+@DashboardRouter.get("/doctor", tags=['Dashboard'])
 async def get_doctor(doctor_id: int, db: Session = Depends(get_db_connection)):
     return await Read_Doctor(doctor_id, db)
 
@@ -72,3 +72,9 @@ async def all_activities(db: Session = Depends(get_db_connection)):
 @DashboardRouter.post("/activities/add", tags=['Dashboard'])
 async def add_activity_all_users(activity: ActivityCreate, db: Session = Depends(get_db_connection)):
     return await add_users_activity(activity=activity, db=db)
+
+#* send Email
+@DashboardRouter.post('/send-email')
+async def send_email_to_admin(information: Email):
+    await send_email(information)
+    return{'status': '200', 'message':'Email sent successfully'}

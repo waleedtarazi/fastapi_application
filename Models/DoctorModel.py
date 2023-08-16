@@ -9,14 +9,14 @@ class DoctorBase(BaseModel):
     phone: Optional[str] = None
     clinic_location : Optional[str] = None
     class Config:
-        orm_mode = True
+        from_attributes = True
         
 class DoctorLogIn(BaseModel):
     """model when Doctor Logs In"""
     email: str
     password: str
     class Config:
-        orm_mode = True 
+        from_attributes = True 
 
 class DoctorCreate(DoctorLogIn, DoctorBase):
     """Represent user model when Create new account"""
