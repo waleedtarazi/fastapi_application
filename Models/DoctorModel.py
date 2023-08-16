@@ -5,8 +5,9 @@ from Models.UserModel import DoctorUser, UserProfile
 
 class DoctorBase(BaseModel):
     """the base line of Doctor  model"""
-    name: Optional[str] = None
+    name: str
     phone: Optional[str] = None
+    clinic_location : Optional[str] = None
     class Config:
         orm_mode = True
         
@@ -19,7 +20,8 @@ class DoctorLogIn(BaseModel):
 
 class DoctorCreate(DoctorLogIn, DoctorBase):
     """Represent user model when Create new account"""
-    confirm_password: str 
+    confirm_password: str
+    
     
 class DoctorUpdate(DoctorBase):
     """Represent the user model while Editing his profile"""
@@ -38,7 +40,8 @@ class DoctorProfile(DoctorBase):
             name=doctor.name,
             phone=doctor.phone,
             email=doctor.email,
-            id = doctor.id
+            id = doctor.id,
+            clinic_location = doctor.clinic_location
         )
     
 

@@ -7,6 +7,8 @@ class UserBase(BaseModel):
     """the base line of User model"""
     name: Optional[str] = None
     age: Optional[int] = None
+    phone: Optional[str] = None
+    living_location : Optional[str] = None
     class Config:
         orm_mode = True
         
@@ -27,11 +29,14 @@ class UserUpdate(UserBase):
     current_password: Optional[str] = None
     new_password: Optional[str] = None
     confirm_new_password: Optional[str] = None
+    diagnose: Optional[str] = None
     
         
 class UserProfile(UserBase):
     """Represent the user's profile model"""
     email: str
+    id: int
+    diagnose: str
     
     @classmethod
     def from_obj(cls, user) -> "UserProfile":
@@ -39,12 +44,17 @@ class UserProfile(UserBase):
             name=user.name,
             age=user.age,
             email=user.email,
+            living_location = user.living_location,
+            phone = user.phone,
+            id = user.id,
+            diagnose = user.diagnose
         )
     
     
 class DoctorUser(UserProfile):
     """Represent the user model when Doctor retrive users"""
-    feelings: list[Feeling] = []    
+    feelings: list[Feeling] = []
+    diagnose: str
     
 class User(DoctorUser):
     """Represent the whole user model"""

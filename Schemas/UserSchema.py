@@ -12,7 +12,10 @@ class User(EntityMeta):
             name=user.name,
             age=user.age,
             email=user.email,
-            hashed_password=hash_pass)
+            hashed_password=hash_pass,
+            phone=user.phone,
+            living_location = user.living_location
+            )
 
     @classmethod
     def from_profile(cls, user: UserProfile) -> "User":
@@ -20,15 +23,18 @@ class User(EntityMeta):
         return cls(
             name=user.name,
             age=user.age,
-            email=user.email,)
+            email=user.email,
+            diagnose=user.diagnose)
 
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True, index=True)
     name = Column(String)
-    hashed_password = Column(String)
     age = Column(Integer)
     phone = Column(String(length=10), index =True)
+    living_location = Column(String)
+    diagnose = Column(String, default = 'سليم')
+    hashed_password = Column(String)
     fcm = Column(String, index= True)
     is_active = Column(Boolean, default=True)
     

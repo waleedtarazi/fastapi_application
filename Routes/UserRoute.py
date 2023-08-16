@@ -48,8 +48,8 @@ async def get_feelings(month:Union[int, None] = None,
 
 #* Make appoitment with doctor        
 @UserRouter.post('/request_doctor', tags=['User'])
-async def make_doctor_request(doctor_id: int, user_token: str = Header(None), db: Session = Depends(get_db_connection)):
-    request_db = make_request_with_doctor(user_token, doctor_id, db)
+async def make_doctor_request(doctor_id: int, desctiption:str, user_token: str = Header(None), db: Session = Depends(get_db_connection)):
+    request_db = make_request_with_doctor(user_token, doctor_id, desctiption, db)
     if request_db:
         return {"request": request_db}
     

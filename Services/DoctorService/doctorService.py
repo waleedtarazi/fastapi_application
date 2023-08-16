@@ -8,5 +8,5 @@ async def Get_Patients(doctor_token, db) -> list[DoctorUser]:
         raise HTTPException(status_code= 401, detail='Not authorized. Please log in first.')
     doctor_id = get_JWT_ID(doctor_token)
     doctor = get_doctor(db, doctor_id)
-    patients = [DoctorUser(name=p.name, age=p.age, email=p.email, feelings=p.feelings) for p in doctor.patients]
+    patients = [DoctorUser(name=p.name, age=p.age, email=p.email, living_location=p.living_location, id=p.id, diagnose=p.diagnose, feelings=p.feelings) for p in doctor.patients]
     return patients
