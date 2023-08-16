@@ -10,8 +10,8 @@ from Services.Crons.dailyNotification import custom_scheduler
 
 
 app = FastAPI(
-    title="MoodBot Stack Development\n pre-release",
-    version="V 1.1.2",
+    title="Basita applicatoin \n Release Version",
+    version="V 3.0.2",
     openapi_tags=Tags,
 )
 
