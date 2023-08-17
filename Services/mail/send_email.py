@@ -3,6 +3,8 @@ from decouple import config
 from Models.EmailModel import Email
 from pathlib import Path
 
+from Repository.UserRepository import get_user
+
 
 MAIL_USERNAME = config('MAIL_USERNAME')
 MAIL_PASSWORD = config('MAIL_PASSWORD')
@@ -10,6 +12,7 @@ MAIL_FROM = config('MAIL_FROM')
 MAIL_PORT = config('MAIL_PORT')
 MAIL_SERVER = config('MAIL_SERVER')
 MAIL_FROM_NAME = config('MAIL_FROM_NAME')
+ADMIN_MAIL = config('ADMIN_MAIL')
 
 
 conf = ConnectionConfig(
@@ -38,6 +41,13 @@ async def simple_send(email: Email):
 
     fm = FastMail(conf)
     await fm.send_message(message)
+
+
+
+async def send_warrning_email(user_id: int, db):
+    user_name = get_user(db, user_id).name
+    _Email = Email(email=ADMIN_MAIL,user_name=user_name)
+    return await send_email(_Email)
 
 async def send_email(informations: Email):
     message = MessageSchema(

@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from Models.ActivityModel import ActivityCreate
 from Models.EmailModel import Email
 from Models.NotificationModel import Notificatoin
-from Services.mail.send_email import send_email
+from Services.mail.send_email import send_email, send_warrning_email
 from db.database import get_db_connection
 from Models.FeelingModel import Feeling
 from fastapi import (APIRouter, 
@@ -75,6 +75,6 @@ async def add_activity_all_users(activity: ActivityCreate, db: Session = Depends
 
 #* send Email
 @DashboardRouter.post('/send-email')
-async def send_email_to_admin(information: Email):
-    await send_email(information)
+async def send_email_to_admin(user_id: int, db: Session = Depends(get_db_connection)):
+    await send_warrning_email(user_id, db)
     return{'status': '200', 'message':'Email sent successfully'}
