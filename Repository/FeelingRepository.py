@@ -1,4 +1,6 @@
 from sqlalchemy.orm import Session
+from sqlalchemy.sql import cast
+from sqlalchemy import extract
 from Schemas.FeelingsSchema import Feeling as SchemaFeeling
 from Models.FeelingModel import FeelingCreate, Feeling
 from datetime import datetime
@@ -11,14 +13,31 @@ def get_all_feelings(db: Session, user_id:int = None):
     
 
 # -------------------------- Creat Feeling --------------------------
-def creat_user_feeling(db: Session, feeleing: FeelingCreate, user_id:int):
-    db_item = SchemaFeeling(**feeleing.dict(), owner_id=user_id)
+def creat_user_feeling(db: Session, feeling: FeelingCreate, user_id:int):
+    print("in feeling Repo", feeling)
+    db_item = SchemaFeeling(**feeling.dict(), owner_id=user_id)
     db.add(db_item)
     db.commit()
     db.refresh(db_item)
     return db_item
 
+def get_feeling_by_date(user_id: int, target_date: datetime.date, db: Session):
+    print(target_date)
+    day = target_date.day
+    month = target_date.month
+    year = target_date.year
+    start_date = datetime(year=year, month=month,day=day)
+    end_date = datetime(year=year, month=month, day=day+1)
+    feelings = db.query(SchemaFeeling).filter(
+        SchemaFeeling.owner_id == user_id,
+        SchemaFeeling.created_at>= start_date, SchemaFeeling.created_at < end_date).first()
+    return feelings
 
+def update_feeling_db(feeling: SchemaFeeling, db: Session):
+    """ update the current request into DB """
+    db.commit()
+    db.refresh(feeling)
+    return feeling
 
 def get_monthly_feelings(db: Session, id:int, 
                          year:int = 0, 

@@ -39,12 +39,18 @@ async def edit_profile(user_update: UserUpdate, user_token: str = Header(None), 
     return await Edit_Profile_client(user_update, user_token, db, type_)
         
 #* GET Feelings 
-@UserRouter.get('/feelings', response_model= list[Feeling], tags=['User'])
+@UserRouter.get('/feelings', tags=['User'])
 async def get_feelings(month:Union[int, None] = None,
                        year:Union[int, None] = None,
                        user_token:str= Header(None),
                        db: Session = Depends(get_db_connection)):
     return await Get_Feelings(month, year, user_token, db)
+
+#* make feeling
+@UserRouter.post('/feelings', tags=['User'])
+async def make_feeling(new_feeling: FeelingCreate, user_token: str = Header(None), db: Session = Depends(get_db_connection)):
+    return await Add_Feeling(new_feeling,user_token,db)
+    
 
 #* Make appoitment with doctor        
 @UserRouter.post('/request_doctor', tags=['User'])
@@ -59,7 +65,7 @@ async def get_activities(user_token: str = Header(None), db: Session = Depends(g
     return await Get_Activites(user_token, db)
 
 #* Update Activity weight value 
-@UserRouter.put('/update_activity', tags=["User"])
+@UserRouter.put('/activity', tags=["User"])
 async def update_activity(added_weight: int, activity_id: int, user_token: str = Header(None), db: Session = Depends(get_db_connection)):
     updated_activity = await Update_Activity_Weight(user_token=user_token, activity_id=activity_id, added_weight=added_weight, db=db)
     return updated_activity
