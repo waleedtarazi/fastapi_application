@@ -1,5 +1,5 @@
 fastapi
-pydantic==1.10.9
+pydantic
 sqlalchemy
 uvicorn[standard]
 PyJWT

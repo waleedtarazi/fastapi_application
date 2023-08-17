@@ -1,7 +1,8 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, subqueryload
 from JWT.crypto_handler import get_password_hash
 from Schemas.UserSchema import User as SchemaUser
 from Models.UserModel import UserCreate
+from Schemas.RequestSchema import Request as SchemaRequest
 
 
 
@@ -33,3 +34,17 @@ def update_user_db(user, db: Session):
     db.commit()
     db.refresh(user)
     return user
+
+
+def get_my_requests_db(user_id: int, db: Session):
+
+    query = db.query(SchemaRequest)\
+        .options(subqueryload(SchemaRequest.user), subqueryload(SchemaRequest.doctor))\
+        .filter(SchemaRequest.user_id == user_id).order_by(SchemaRequest.id)
+
+    # if on_status is not None and on_status != 'all':
+    #     query = query.filter(SchemaRequest.status == on_status)
+
+    requests = query.all()
+
+    return requests

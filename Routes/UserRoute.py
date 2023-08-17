@@ -1,7 +1,7 @@
 from typing import Union
 from fastapi import APIRouter, Depends, HTTPException, Header
 from sqlalchemy.orm import Session
-from Services.UserService.SendRequest import make_request_with_doctor
+from Services.UserService.RequestServices import get_user_requests, make_request_with_doctor
 from Services.UserService.userService import *
 from db.database import get_db_connection
 from Models.UserModel import *
@@ -58,7 +58,12 @@ async def make_doctor_request(doctor_id: int, desctiption:str, user_token: str =
     request_db = make_request_with_doctor(user_token, doctor_id, desctiption, db)
     if request_db:
         return {"request": request_db}
-    
+
+# * get user requests
+@UserRouter.get('/requests', tags=['User'])
+async def get_request(user_token: str = Header(None), db: Session = Depends(get_db_connection)):
+    return await get_user_requests(user_token,db)
+
 #* Get Activities
 @UserRouter.get('/activity', tags=['User'])
 async def get_activities(user_token: str = Header(None), db: Session = Depends(get_db_connection)):
