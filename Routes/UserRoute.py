@@ -59,7 +59,7 @@ async def make_doctor_request(doctor_id: int, desctiption:str, user_token: str =
     if request_db:
         return {"request": request_db}
 
-# * get user requests
+#* get user requests
 @UserRouter.get('/requests', tags=['User'])
 async def get_request(user_token: str = Header(None), db: Session = Depends(get_db_connection)):
     return await get_user_requests(user_token,db)

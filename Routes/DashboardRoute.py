@@ -75,6 +75,6 @@ async def add_activity_all_users(activity: ActivityCreate, db: Session = Depends
 
 #* send Email
 @DashboardRouter.post('/send-email')
-async def send_email_to_admin(user_id: int, db: Session = Depends(get_db_connection)):
-    await send_warrning_email(user_id, db)
+async def send_email_to_admin(user_id: int, message:str, db: Session = Depends(get_db_connection)):
+    await send_warrning_email(user_id, message, db)
     return{'status': '200', 'message':'Email sent successfully'}

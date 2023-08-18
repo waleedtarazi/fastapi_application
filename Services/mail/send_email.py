@@ -44,16 +44,17 @@ async def simple_send(email: Email):
 
 
 
-async def send_warrning_email(user_id: int, db):
+async def send_warrning_email(user_id: int, message:str, db):
     user_name = get_user(db, user_id).name
-    _Email = Email(email=ADMIN_MAIL,user_name=user_name)
+    _Email = Email(email=ADMIN_MAIL,user_name=user_name, message=message)
     return await send_email(_Email)
 
 async def send_email(informations: Email):
     message = MessageSchema(
         subject='Welcome to Basita application',
         recipients=[informations.email],
-        template_body={'user_name': informations.user_name},
+        template_body={'user_name': informations.user_name,
+                       'user_message': informations.message},
         subtype=MessageType.html
     )
     fm = FastMail(conf)
