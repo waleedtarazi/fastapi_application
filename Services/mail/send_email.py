@@ -1,5 +1,6 @@
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig, MessageType
 from decouple import config
+from JWT.jwt_handler import get_JWT_ID
 from Models.EmailModel import Email
 from pathlib import Path
 
@@ -29,22 +30,8 @@ conf = ConnectionConfig(
     TEMPLATE_FOLDER= Path('Services/mail/Templates/'),
 )
 
- 
-async def simple_send(email: Email):
-    html = """<p>Hi this test mail, thanks for using Fastapi-mail</p> """
-
-    message = MessageSchema(
-        subject="Fastapi-Mail module",
-        recipients=email.dict().get("email"),
-        body=html,
-        subtype=MessageType.html)
-
-    fm = FastMail(conf)
-    await fm.send_message(message)
-
-
-
-async def send_warrning_email(user_id: int, message:str, db):
+async def send_warrning_email(user_token: str, message:str, db):
+    user_id = get_JWT_ID(user_token)
     user_name = get_user(db, user_id).name
     _Email = Email(email=ADMIN_MAIL,user_name=user_name, message=message)
     return await send_email(_Email)
