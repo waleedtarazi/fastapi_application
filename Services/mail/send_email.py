@@ -31,7 +31,8 @@ conf = ConnectionConfig(
 )
 
 async def send_warrning_email(user_token: str, message:str, db):
-    user_id = get_JWT_ID(user_token)
+    user_id = 1
+    # get_JWT_ID(user_token)
     user_name = get_user(db, user_id).name
     _Email = Email(email=ADMIN_MAIL,user_name=user_name, message=message)
     return await send_email(_Email)
