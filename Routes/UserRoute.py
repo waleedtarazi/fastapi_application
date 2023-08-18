@@ -44,7 +44,11 @@ async def get_feelings(month:Union[int, None] = None,
                        year:Union[int, None] = None,
                        user_token:str= Header(None),
                        db: Session = Depends(get_db_connection)):
-    return await Get_Feelings(month, year, user_token, db)
+    feelings = await Get_Feelings(month, year, user_token, db)
+    if feelings:
+        return feelings
+    else:
+        raise HTTPException(status_code=200, detail = "لا يوجد مشاعر كافية لعرضها")
 
 #* make feeling
 @UserRouter.post('/feelings', tags=['User'])
