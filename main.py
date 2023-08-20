@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from Routes.DiagonseRouter import DiagnoseRouter
 from Routes.SentimentRoute import SentimentRouter
 from Schemas.BaseSchema import init_db
 from Services.Notifications.InitializeNotification import initNotifications
@@ -26,6 +27,7 @@ app.include_router(UserRouter)
 app.include_router(DoctorRouter)
 app.include_router(DashboardRouter)
 app.include_router(SentimentRouter)
+app.include_router(DiagnoseRouter)
 
 
 init_db()

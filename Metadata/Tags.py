@@ -11,4 +11,8 @@ Tags = [
         "name": "Dashboard",
         "description": "Contains CRUD operation for Dashboard",
     },
+    {
+        "name": "Diagnose",
+        "description": "Contains Diagnose system APIs",
+    },
 ]
