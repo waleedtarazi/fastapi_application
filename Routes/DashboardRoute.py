@@ -78,3 +78,17 @@ async def add_activity_all_users(activity: ActivityCreate, db: Session = Depends
 async def send_email_to_admin(user_token: str, message:str, db: Session = Depends(get_db_connection)):
     await send_warrning_email(user_token, message, db)
     return {'status': '200', 'message':'Email sent successfully'}
+
+
+@DashboardRouter.post('/fake-message')
+async def send_fake_message(message: str, buttons: bool):
+    if buttons:
+       data = [{'recipient_id': 'default',
+             'text': 'السلام عليكم ,كيف حالك؟',
+             'buttons': [
+                 {'title': 'هل تريد مساعدة؟', 'payload': '/help'},
+                 {'title': 'هل تريد الفضفضة؟', 'payload': '/feelings_express'}]}]  
+    else:
+        data = [{'recipient_id': 'default',
+                 'text': 'السلام عليكم ,كيف حالك؟'}]
+    return data
