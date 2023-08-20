@@ -7,7 +7,7 @@ class ActivityType(str, BaseEnum):
     """Class represent the ENUM of the Activity's Type"""
     POSITIVE = "positive"
     NEGATIVE = "negative"
-    NUTRAL = "nutral"
+    NUTRAL = "neutral"
 
 
 user_activities = Table('user_activities', EntityMeta.metadata,

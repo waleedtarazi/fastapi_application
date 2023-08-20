@@ -42,7 +42,8 @@ async def Add_Feeling(new_feeling:FeelingCreate, user_token: int, db: Session):
     
 
 async def Get_Activites(token: str, db: Session):
-    user_id = get_JWT_ID(token)
+    user_id = 1 
+    # get_JWT_ID(token)
     db_user = get_user(user_id= user_id, db=db)
     if db_user:
         db_activities = db_user.activities
