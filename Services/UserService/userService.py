@@ -1,4 +1,5 @@
 from fastapi import HTTPException
+from datetime import datetime
 from JWT.jwt_handler import  get_JWT_ID
 from Models.FeelingModel import FeelingCreate
 from Models.FeelingModel import Feeling as FeelingModel
@@ -7,7 +8,7 @@ from Repository.FeelingRepository import creat_user_feeling, get_all_feelings, g
 from Repository.UserRepository import get_user
 from sqlalchemy.orm import Session
 from Schemas.ActivitySchema import Activity as SchemaActivity
-from Schemas.FeelingsSchema import Feeling as SchemaFeelng
+from Schemas.FeelingsSchema import Feeling as SchemaFeeling
 
 async def Get_Feelings(month, year, user_token, db):
     if not user_token:
@@ -18,8 +19,8 @@ async def Get_Feelings(month, year, user_token, db):
         db_feelings = get_monthly_feelings(db=db, id=get_JWT_ID(user_token), year=year, month=month)
     return db_feelings
 
-
-async def update_feeling_helper(feeling_update:FeelingCreate, old_feeling:SchemaFeelng, db: Session):
+# -------------------------------
+async def update_feeling_helper(feeling_update:FeelingCreate, old_feeling:SchemaFeeling, db: Session):
     feeling_update_dict = {**vars(feeling_update)}   
     for key, value in feeling_update_dict.items():
         if hasattr(old_feeling, key) and value not in (None, 0, 'None', " ", ""): 
@@ -32,8 +33,11 @@ async def update_feeling_helper(feeling_update:FeelingCreate, old_feeling:Schema
 async def Add_Feeling(new_feeling:FeelingCreate, user_token: int, db: Session):
     if not user_token:
         raise HTTPException(status_code=401, detail="Not Authorized")
-    user_id = get_JWT_ID(user_token)    
-    old_feeling = get_feeling_by_date(user_id=user_id, target_date=new_feeling.created_at, db=db)
+    user_id = 1 
+    # get_JWT_ID(user_token) 
+    # convert the  create feeling -> feeling 
+    print(new_feeling)  
+    old_feeling = get_feeling_by_date(user_id=user_id, target_date=datetime.utcnow(), db=db)
     if old_feeling:
         old_feeling = await update_feeling_helper(new_feeling, old_feeling, db)
     else:

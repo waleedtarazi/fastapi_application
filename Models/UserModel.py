@@ -1,8 +1,9 @@
 from typing import Optional
 from pydantic import BaseModel
+from Models.FeelingModel import Feeling
 
 from Models.RequestModel import RequestInformation, UserRequest
-from .FeelingModel import Feeling
+
 class UserBase(BaseModel):
     """the base line of User model"""
     name: Optional[str] = None

@@ -1,7 +1,6 @@
 from sqlalchemy.orm import Session, subqueryload
 from JWT.crypto_handler import get_password_hash
 from Schemas.DoctorSchema import Doctor as SchemaDoctor
-from Schemas.UserSchema import User as SchemaUser
 from Schemas.RequestSchema import Request as SchemaRequest
 from Models.DoctorModel import DoctorCreate
 

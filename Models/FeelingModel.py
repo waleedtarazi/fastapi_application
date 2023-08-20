@@ -1,13 +1,12 @@
-import datetime
+from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel
-
+from Schemas.FeelingsSchema import FeelingType
 
 class FeelingBase(BaseModel):
-    title: str
+    type: FeelingType
     
 class FeelingCreate(FeelingBase):
-    created_at: datetime.datetime
     confidence: float
     message: Optional[str] = None
     
@@ -18,13 +17,14 @@ class FeelingCreate(FeelingBase):
 class Feeling(FeelingCreate):
     
     id: int
+    time_created: Optional[datetime] = datetime.utcnow()
     class Config:
         from_attributes = True
     @classmethod
     def from_obj(cls, feeling) -> "Feeling":
         return cls(
-            title=feeling.title,
-            id = feeling.id,
+            id=feeling.id,
+            type=feeling.type,
             message = feeling.message,
             confidence = feeling.confidence,
             created_at = feeling.created_at
