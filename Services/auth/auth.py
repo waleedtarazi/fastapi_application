@@ -46,7 +46,11 @@ async def Get_Profile_client(client_token: str, db: Session, type_ = Union[Schem
     """Get Client(user/doctor) Pofile"""
     if not client_token:
         raise HTTPException(status_code=401, detail='No token provided. Please log in first.')
-    db_client = get_client_db(db, get_JWT_ID(client_token),type_)
+    client_id = 1
+    # get_JWT_ID(client_token)
+    print('id here ', type_)
+    db_client = get_client_db(db,client_id,type_)
+    print('token clinet',get_JWT_ID(client_token))
     if not db_client:
         raise HTTPException(status_code=404, detail='Account not found.')
     

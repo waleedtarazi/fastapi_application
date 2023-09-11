@@ -33,8 +33,8 @@ async def update_feeling_helper(feeling_update:FeelingCreate, old_feeling:Schema
 async def Add_Feeling(new_feeling:FeelingCreate, user_token: int, db: Session):
     if not user_token:
         raise HTTPException(status_code=401, detail="Not Authorized")
-    user_id = 1 
-    # get_JWT_ID(user_token) 
+    user_id = 4 
+    # user_id = get_JWT_ID(user_token) 
     # convert the  create feeling -> feeling 
     print(new_feeling)  
     old_feeling = get_feeling_by_date(user_id=user_id, target_date=datetime.utcnow(), db=db)
@@ -46,8 +46,8 @@ async def Add_Feeling(new_feeling:FeelingCreate, user_token: int, db: Session):
     
 
 async def Get_Activites(token: str, db: Session):
-    user_id = 1 
-    # get_JWT_ID(token)
+    user_id = 4 
+    # user_id = get_JWT_ID(token)
     db_user = get_user(user_id= user_id, db=db)
     if db_user:
         db_activities = db_user.activities

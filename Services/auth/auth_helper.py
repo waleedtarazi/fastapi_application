@@ -63,6 +63,7 @@ def update_client(client_update: Union[UserUpdate, DoctorUpdate], old_client:Uni
     if status:
         client_update_dict['hashed_password'] = new_password    
     for key, value in client_update_dict.items():
+        print('key: ',key, 'value: ', value)
         if hasattr(old_client, key) and value not in (None, 0, 'None', " ", ""): 
             if getattr(old_client, key) != value:
                 setattr(old_client, key, value)

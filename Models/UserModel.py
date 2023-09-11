@@ -10,6 +10,7 @@ class UserBase(BaseModel):
     age: Optional[int] = None
     phone: Optional[str] = None
     living_location : Optional[str] = None
+    fcm: str = None
     class Config:
         from_attributes = True
         
@@ -60,7 +61,6 @@ class DoctorUser(UserProfile):
 class User(DoctorUser):
     """Represent the whole user model"""
     id: int
-    fcm: str = None
     doctor_id: int = None
     requests: list[UserRequest]
     is_active: bool
